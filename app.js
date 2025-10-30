@@ -104,11 +104,11 @@ function init() {
     // Create planets
     createPlanets();
 
-    // Lighting
+    // Lighting (enhanced for the bigger, shinier sun!)
     const ambientLight = new THREE.AmbientLight(0x333333);
     scene.add(ambientLight);
 
-    const pointLight = new THREE.PointLight(0x4299e1, 2, 100);
+    const pointLight = new THREE.PointLight(0x4299e1, 4, 150);
     pointLight.position.set(0, 0, 0);
     scene.add(pointLight);
 
@@ -127,35 +127,45 @@ function init() {
 }
 
 function createSun() {
-    // Create glowing blue star
-    const sunGeometry = new THREE.SphereGeometry(2, 32, 32);
+    // Create glowing blue star (BIGGER AND SHINIER!)
+    const sunGeometry = new THREE.SphereGeometry(4, 32, 32);
     const sunMaterial = new THREE.MeshBasicMaterial({
         color: 0x4299e1,
         emissive: 0x4299e1,
-        emissiveIntensity: 1
+        emissiveIntensity: 1.5
     });
     sun = new THREE.Mesh(sunGeometry, sunMaterial);
     scene.add(sun);
 
-    // Add glow effect
-    const glowGeometry = new THREE.SphereGeometry(2.5, 32, 32);
+    // Add glow effect (stronger and larger)
+    const glowGeometry = new THREE.SphereGeometry(5, 32, 32);
     const glowMaterial = new THREE.MeshBasicMaterial({
         color: 0x4299e1,
         transparent: true,
-        opacity: 0.3
+        opacity: 0.5
     });
     const glow = new THREE.Mesh(glowGeometry, glowMaterial);
     sun.add(glow);
 
-    // Outer glow
-    const outerGlowGeometry = new THREE.SphereGeometry(3.5, 32, 32);
+    // Outer glow (much larger and more vibrant)
+    const outerGlowGeometry = new THREE.SphereGeometry(7, 32, 32);
     const outerGlowMaterial = new THREE.MeshBasicMaterial({
         color: 0x667eea,
         transparent: true,
-        opacity: 0.15
+        opacity: 0.3
     });
     const outerGlow = new THREE.Mesh(outerGlowGeometry, outerGlowMaterial);
     sun.add(outerGlow);
+
+    // Extra sparkly outer layer for maximum shine!
+    const sparkleGeometry = new THREE.SphereGeometry(8.5, 32, 32);
+    const sparkleMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.1
+    });
+    const sparkle = new THREE.Mesh(sparkleGeometry, sparkleMaterial);
+    sun.add(sparkle);
 }
 
 function createStarField() {
@@ -271,9 +281,18 @@ function createPlanets() {
 function animate() {
     requestAnimationFrame(animate);
 
-    // Rotate sun
+    // Rotate and pulse sun for maximum shine!
     if (sun) {
         sun.rotation.y += 0.002;
+
+        // Pulsating glow effect
+        const pulseIntensity = 1 + Math.sin(Date.now() * 0.001) * 0.2;
+        if (sun.children.length > 0) {
+            sun.children.forEach((glowLayer, index) => {
+                const layerPulse = 1 + Math.sin(Date.now() * 0.001 + index * 0.5) * 0.15;
+                glowLayer.scale.set(layerPulse, layerPulse, layerPulse);
+            });
+        }
     }
 
     // Orbit planets
